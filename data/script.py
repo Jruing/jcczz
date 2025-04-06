@@ -3,8 +3,8 @@
 import pathlib
 import json
 
-
-class DataBatch():
+# 数据处理
+class DataBatch:
     def __init__(self):
         zhiye_path = pathlib.Path()
         self.zhiye_json = zhiye_path.absolute().joinpath("data").joinpath("zhiye.json")
@@ -19,6 +19,7 @@ class DataBatch():
         self.tezhi_data(self.tezhi_json)
         self.hero_data(self.hero_json)
 
+    # 职业数据解析
     def zhiye_data(self,zhiye_json_path):
         zhiye_json = []
         with open(zhiye_json_path, 'r', encoding='utf-8') as f:
@@ -29,6 +30,7 @@ class DataBatch():
         unique_data = [dict(t) for t in {tuple(d.items()) for d in zhiye_json}]
         self.zhiye_list = [{i["name"]: i["id"]} for i in unique_data]
 
+    # 特质数据解析
     def tezhi_data(self, tezhi_json_path):
         tezhi_json = []
         with open(tezhi_json_path, 'r', encoding='utf-8') as f:
@@ -39,6 +41,7 @@ class DataBatch():
         unique_data = [dict(t) for t in {tuple(d.items()) for d in tezhi_json}]
         self.tezhi_list = [ {i["name"]:i["id"]} for i in unique_data]
 
+    # 英雄数据解析
     def hero_data(self, hero_json_path):
         # 处理英雄
         with open(hero_json_path, 'r', encoding='utf-8') as f:
@@ -62,6 +65,7 @@ class DataBatch():
 
                 self.hero_list.append({"id":v['id'],"name":v["name"],"zhiye":list(set(tezhi)),"tezhi":list(set(zhiye)),"price":int(v["price"])})
 
+    # 封装数据
     def save_data(self):
         # 特质+职业+费用组成key
         result = {}

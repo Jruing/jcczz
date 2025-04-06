@@ -47,7 +47,7 @@ def cv_detections(source_image, screen_image):
     template_image = cv2.imread(screen_image, cv2.IMREAD_GRAYSCALE)  # 截图
 
     # 2. 初始化参数
-    threshold = 0.8  # 匹配阈值
+    threshold = 0.7  # 匹配阈值
     scale_factors = [1.0, 0.9, 0.8, 0.7, 0.6, 0.5]  # 缩放比例列表
     matches = []
 
@@ -83,7 +83,7 @@ def cv_detections(source_image, screen_image):
         return x_y_list
     else:
         for i in filtered_matches:
-            x = int((i[0]+i[2])/2)
+            x = int((i[0]+i[2])/2+20)
             y = int((i[1]+i[3])/2)
             x_y_list.append((x,y))
     return x_y_list
@@ -107,5 +107,5 @@ def cv_detections(source_image, screen_image):
     # cv2.destroyAllWindows()
 
 
-# rs = cv_detections("full.png", "img.png")
-# print(rs)
+rs = cv_detections("images/other/full.png", "images/hero/buquzhanshen.png")
+print(rs)

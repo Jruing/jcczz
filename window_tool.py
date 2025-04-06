@@ -1,9 +1,10 @@
 import time
 
 import win32con
-import win32gui
+import win32gui,win32ui
 from PIL import ImageGrab
 from pynput.mouse import Controller, Button
+from ctypes import windll
 
 
 def get_window_position_by_title(window_title):
@@ -30,7 +31,7 @@ def get_window_position_by_title(window_title):
 
     # 获取第一个匹配窗口的句柄
     hwnd = hwnds[0]
-    print(f"找到窗口句柄: {hwnd}")
+    # print(f"找到窗口句柄: {hwnd}")
 
     # 获取窗口的矩形区域 (左, 上, 右, 下)
     rect = win32gui.GetWindowRect(hwnd)
@@ -41,8 +42,8 @@ def get_window_position_by_title(window_title):
     height = bottom - top
 
     # 输出窗口信息
-    print(f"窗口标题: {win32gui.GetWindowText(hwnd)}")
-    print(f"窗口位置: 左={left}, 上={top}, 宽={width}, 高={height}")
+    # print(f"窗口标题: {win32gui.GetWindowText(hwnd)}")
+    # print(f"窗口位置: 左={left}, 上={top}, 宽={width}, 高={height}")
     return {
         "title": win32gui.GetWindowText(hwnd),
         "left": left,
@@ -122,9 +123,14 @@ def capture_window(hwnd):
     :return: 截图的 PIL 图像对象
     """
     # 获取窗口的矩形区域 (左, 上, 右, 下)
+    windll.user32.SetProcessDPIAware()
     rect = win32gui.GetWindowRect(hwnd)
     left, top, right, bottom = rect
-
+    # 创建设备上下文
+    hdc = win32gui.GetWindowDC(hwnd)
+    dc = win32ui.CreateDCFromHandle(hdc)
+    mem_dc = dc.CreateCompatibleDC()
+    windll.user32.PrintWindow(hwnd, mem_dc.GetSafeHdc(), 2)
     # 截取窗口区域
     screenshot = ImageGrab.grab(bbox=(left, top, right, bottom))
     return screenshot

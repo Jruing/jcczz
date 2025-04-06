@@ -22,6 +22,7 @@ class AssistantApp:
         self.save_hero = []
         self.data = DataBatch()
 
+
         # 第一个容器
         self.frame1 = ttk.Frame(self.root)
         self.frame1.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
@@ -118,7 +119,7 @@ class AssistantApp:
                     hwnd = activate_window(title)
                     print(f"窗口 '{title}' 已激活")
                     # 获取图片路径并识别
-
+                    time.sleep(0.5)
                     other_image_path = pathlib.Path(image_items["other"])
                     other_image = other_image_path.absolute().joinpath("full.png")
                     try:
@@ -136,7 +137,7 @@ class AssistantApp:
                     print("保存的英雄列表", self.save_hero)
                     for i in self.save_hero:
                         result = ''.join(lazy_pinyin(i))
-
+                        print("result",i,result)
                         hero_image_path = pathlib.Path(image_items["hero"])
                         hero_image = hero_image_path.absolute().joinpath(f"{result}.png")
                         rs = cv_detections(other_image, hero_image)
@@ -150,9 +151,10 @@ class AssistantApp:
                             for i in rs:
                                 x = i[0] + win_x
                                 y = i[1] + win_y
-                                time.sleep(0.5)
+                                time.sleep(0.3)
                                 simulate_mouse_click(x, y)
                         else:
+                            activate_window(title)
                             print(f"窗口 '{title}' 未激活")
             except AttributeError:
                 print(f"特殊键 {key} 被按下")
